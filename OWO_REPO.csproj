@@ -70,7 +70,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>XCOPY "$(SolutionDir)owo" "$(TargetDir)\owo\" /S /Y
+    <PostBuildEvent>XCOPY "$(SolutionDir)OWO" "$(TargetDir)\OWO\" /S /Y
 del "$(TargetDir)\*.pdb"
 del "$(TargetDir)\*.xml"</PostBuildEvent>
   </PropertyGroup>
