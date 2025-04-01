@@ -24,7 +24,7 @@ namespace OWO_REPO
 
         private void RegisterAllSensationsFiles()
         {
-            string configPath = Directory.GetCurrentDirectory() + "BepinEx\\Plugins\\OWO";
+            string configPath = Directory.GetCurrentDirectory() + "\\BepinEx\\Plugins\\OWO";
             DirectoryInfo d = new DirectoryInfo(configPath);
             FileInfo[] Files = d.GetFiles("*.owo", SearchOption.AllDirectories);
             for (int i = 0; i < Files.Length; i++)
