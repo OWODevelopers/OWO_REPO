@@ -16,11 +16,13 @@ namespace OWO_REPO
         internal static new ManualLogSource Log;
         #pragma warning restore CS0109
 
+        public static OWOSkin owoSkin;
+
         private void Awake()
         {
             Log = Logger;
             Logger.LogMessage("OWO_REPO plugin is loaded!");
-            //owoSkin = new OWOSkin();
+            owoSkin = new OWOSkin();
 
             var harmony = new Harmony("owo.patch.repo");
             harmony.PatchAll();
