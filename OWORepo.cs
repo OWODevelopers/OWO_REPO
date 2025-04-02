@@ -1,20 +1,19 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
+using Photon.Pun;
+using static HurtCollider;
+
 
 namespace OWO_REPO
 {
     [BepInPlugin("org.bepinex.plugins.OWO_REPO", "OWO_REPO", "1.0.0")]
     public class Plugin : BaseUnityPlugin
     {
-        #pragma warning disable CS0109
+#pragma warning disable CS0109
         internal static new ManualLogSource Log;
-        #pragma warning restore CS0109
+#pragma warning restore CS0109
 
         public static OWOSkin owoSkin;
 
@@ -27,5 +26,233 @@ namespace OWO_REPO
             var harmony = new Harmony("owo.patch.repo");
             harmony.PatchAll();
         }
+
+        #region Player
+
+        #region PlayerController
+
+        [HarmonyPatch(typeof(PlayerController), "ChangeState")]
+        public class OnChangeState
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"PlayerController ChangeState");
+            }
+        }
+        
+        [HarmonyPatch(typeof(PlayerController), "Revive")]
+        public class OnRevive
+        {
+            [HarmonyPostfix]
+            public static void Postfix(Vector3 _rotation)
+            {
+                owoSkin.LOG($"PlayerController Revive - _rotation: {_rotation}");
+            }
+        }
+
+        #endregion
+
+        #region PlayerHealth
+
+        [HarmonyPatch(typeof(PlayerHealth), "Hurt")]
+        public class OnHurt
+        {
+            [HarmonyPostfix]
+            public static void Postfix(int damage, bool savingGrace, int enemyIndex = -1)
+            {
+                owoSkin.LOG($"Playerhealth Hurt - Damage: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
+            }
+        }
+
+        [HarmonyPatch(typeof(PlayerHealth), "Heal")]
+        public class OnHeal
+        {
+            [HarmonyPostfix]
+            public static void Postfix(int healAmount, bool effect = true)
+            {
+                owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}");
+            }
+        }
+
+        [HarmonyPatch(typeof(PlayerHealth), "Death")]
+        public class OnDeath
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"Playerhealth Death");
+            }
+        }
+        #endregion
+
+        [HarmonyPatch(typeof(PlayerAvatar), "TumbleStart")]
+        public class OnTumbleStart
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"PlayerTumble TumbleStart");
+            }
+        }
+
+        [HarmonyPatch(typeof(PlayerReviveEffects), "Trigger")]
+        public class OnTrigger
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"PlayerReviveEffects Trigger");
+            }
+        }
+
+        #endregion
+
+
+        #region WorldInteractable
+
+        #region Cauldron
+        [HarmonyPatch(typeof(Cauldron), "CookStart")]
+        public class OnCookStart
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"Cauldron CookStart");
+            }
+        }
+
+        [HarmonyPatch(typeof(Cauldron), "EndCook")]
+        public class OnEndCook
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"Cauldron EndCook");
+            }
+        }
+
+        [HarmonyPatch(typeof(Cauldron), "Explosion")]
+        public class OnExplode
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"Cauldron Explosion");
+            }
+        }
+        #endregion
+
+        [HarmonyPatch(typeof(ExtractionPoint), "OnShopClick")]
+        public class OnOnShopClick
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"ExtractionPoint OnShopClick");
+            }
+        }
+
+        [HarmonyPatch(typeof(ExtractionPoint), "ButtonToggle")]
+        public class OnButtonToggle
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"ExtractionPoint ButtonToggle");
+            }
+        }
+
+        [HarmonyPatch(typeof(MoneyValuable), "MoneyBurst")]
+        public class OnMoneyBurst
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"MoneyValuable MoneyBurst");
+            }
+        }
+        
+        [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
+        public class OnPhysObjectHurt
+        {
+            [HarmonyPostfix]
+            public static void Postfix(PhysGrabObject physGrabObject, BreakImpact impact, float hitForce, float hitTorque, bool apply, bool destroyLaunch)
+            {
+                PhotonView photonView = Traverse.Create(physGrabObject).Field("photonView").GetValue<PhotonView>();
+
+                owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
+            }
+        }
+
+        #endregion
+
+        #region Items
+
+        [HarmonyPatch(typeof(ItemUpgrade), "PlayerUpgrade")]
+        public class OnPlayerUpgrade
+        {
+            [HarmonyPostfix]
+            public static void Postfix(ItemUpgrade __instance)
+            {
+                owoSkin.LOG($"ItemUpgrade PlayerUpgrade");
+
+                bool upgradeDone = Traverse.Create(__instance).Field("upgradeDone").GetValue<bool>();
+                ItemToggle itemToggle = Traverse.Create(__instance).Field("itemToggle").GetValue<ItemToggle>();
+                int playerTogglePhotonID = Traverse.Create(itemToggle).Field("playerTogglePhotonID").GetValue<int>();
+
+                if (!upgradeDone)
+                {
+                    PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromPhotonID(playerTogglePhotonID);
+                    if (playerAvatar.photonView.IsMine)
+                    {
+                        owoSkin.LOG($"YO - ItemUpgrade PlayerUpgrade - YO");
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region GrabBeam
+
+        [HarmonyPatch(typeof(PhysGrabBeam), "Start")]
+        public class OnStart
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"PhysGrabBeam Start");
+            }
+        }
+
+        [HarmonyPatch(typeof(PhysGrabBeam), "OnEnable")]
+        public class OnOnEnable
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"PhysGrabBeam OnEnable");
+            }
+        }
+
+        [HarmonyPatch(typeof(PhysGrabObjectImpactDetector), "BreakRPC")]
+        public class OnBreakRPC
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"PhysGrabObjectImpactDetector BreakRPC");
+            }
+        }
+        
+        #endregion
+
+        
+
+
+
+
+
     }
 }
