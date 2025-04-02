@@ -59,9 +59,14 @@ namespace OWO_REPO
         public class OnHurt
         {
             [HarmonyPostfix]
-            public static void Postfix(int damage, bool savingGrace, int enemyIndex = -1)
+            public static void Postfix(PlayerHealth __instance, int damage, bool savingGrace, int enemyIndex = -1)
             {
+
+                PhotonView photonView = Traverse.Create(__instance).Field("photonView").GetValue<PhotonView>();
+
                 owoSkin.LOG($"Playerhealth Hurt - Damage: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
+                owoSkin.LOG($"Playerhealth Hurt - isMine: {photonView.IsMine}");
+                owoSkin.LOG($"Prueba yo - {PlayerAvatar.instance.photonView.IsMine}");
             }
         }
 
