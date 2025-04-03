@@ -4,6 +4,7 @@ using HarmonyLib;
 using UnityEngine;
 using Photon.Pun;
 using static HurtCollider;
+using static SemiFunc;
 
 
 namespace OWO_REPO
@@ -29,7 +30,7 @@ namespace OWO_REPO
 
         #region Player
 
-        #region PlayerController
+            #region PlayerController
 
         [HarmonyPatch(typeof(PlayerController), "ChangeState")]
         public class OnChangeState
@@ -57,7 +58,7 @@ namespace OWO_REPO
 
         #endregion
 
-        #region PlayerHealth
+            #region PlayerHealth
 
         [HarmonyPatch(typeof(PlayerHealth), "Hurt")]
         public class OnHurt
@@ -144,10 +145,15 @@ namespace OWO_REPO
 
         #endregion
 
-
         #region WorldInteractable
 
-        #region Cauldron
+            #region Explosives
+
+
+
+        #endregion
+
+            #region Cauldron
         [HarmonyPatch(typeof(Cauldron), "CookStart")]
         public class OnCookStart
         {
@@ -179,6 +185,7 @@ namespace OWO_REPO
         }
         #endregion
 
+            #region Shop
         [HarmonyPatch(typeof(ExtractionPoint), "OnShopClick")]
         public class OnOnShopClick
         {
@@ -198,7 +205,9 @@ namespace OWO_REPO
                 owoSkin.LOG($"MoneyValuable MoneyBurst");
             }
         }
-        
+        #endregion
+
+            #region Valuable
         [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
         public class OnPhysObjectHurt
         {
@@ -210,6 +219,7 @@ namespace OWO_REPO
                 owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
             }
         }
+        #endregion
 
         #endregion
 
@@ -230,7 +240,7 @@ namespace OWO_REPO
                 if (!upgradeDone)
                 {
                     PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromPhotonID(playerTogglePhotonID);
-                    if (playerAvatar.photonView.IsMine)
+                    if (playerAvatar.photonView.IsMine || !GameManager.Multiplayer())
                     {
                         owoSkin.LOG($"YO - ItemUpgrade PlayerUpgrade - YO");
                     }
@@ -248,8 +258,15 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
-                    owoSkin.LOG($"PhysGrabber PhysGrabStartEffects");
+                if ((!GameManager.Multiplayer() || __instance.photonView.IsMine)) 
+                {
+                    ItemVolume componentInChildren = __instance.GetComponentInChildren<ItemVolume>();
+                    if ((bool)componentInChildren)
+                    {
+                        owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
+                    
+                    }
+                }
             }
         }
 
@@ -264,10 +281,11 @@ namespace OWO_REPO
             }
         }
 
-        
+
 
         #endregion
 
+        #region GameState
 
         [HarmonyPatch(typeof(GameDirector), "gameStateLoad")]
         public class OngameStateLoad
@@ -320,7 +338,7 @@ namespace OWO_REPO
             }
         }
 
-
+        #endregion
 
 
     }
