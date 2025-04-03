@@ -4,6 +4,7 @@ using HarmonyLib;
 using UnityEngine;
 using Photon.Pun;
 using static HurtCollider;
+using static SemiFunc;
 
 
 namespace OWO_REPO
@@ -248,8 +249,15 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
-                    owoSkin.LOG($"PhysGrabber PhysGrabStartEffects");
+                if ((!GameManager.Multiplayer() || __instance.photonView.IsMine)) 
+                {
+                    ItemVolume componentInChildren = __instance.GetComponentInChildren<ItemVolume>();
+                    if ((bool)componentInChildren)
+                    {
+                        owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
+                    
+                    }
+                }
             }
         }
 
@@ -264,10 +272,12 @@ namespace OWO_REPO
             }
         }
 
-        
+
 
         #endregion
 
+
+        #region GameState
 
         [HarmonyPatch(typeof(GameDirector), "gameStateLoad")]
         public class OngameStateLoad
@@ -320,7 +330,7 @@ namespace OWO_REPO
             }
         }
 
-
+        #endregion
 
 
     }
