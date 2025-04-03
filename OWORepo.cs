@@ -85,7 +85,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(int healAmount, bool effect = true)
             {
-                owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}");
+                owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}"); //it works!
             }
         }
 
@@ -185,7 +185,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                owoSkin.LOG($"ExtractionPoint OnShopClick");
+                owoSkin.LOG($"ExtractionPoint OnShopClick"); //It works!
             }
         }
 
