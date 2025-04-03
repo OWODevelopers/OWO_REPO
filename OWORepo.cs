@@ -306,6 +306,21 @@ namespace OWO_REPO
         }
 
 
+        [HarmonyPatch(typeof(GameDirector), "gameStateStart")]
+        public class OngameStateStart
+        {
+            [HarmonyPostfix]
+            public static void Prefix(GameDirector __instance)
+            {
+                if (!LevelGenerator.Instance.Generated) return;
+
+                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
+                if (gameStateStartImpulse)
+                owoSkin.LOG($"GameDirector gameStateEnd");
+            }
+        }
+
+
 
 
     }
