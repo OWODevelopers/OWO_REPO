@@ -19,6 +19,8 @@ namespace OWO_REPO
 
         public static OWOSkin owoSkin;
 
+        public static float explosionDistance = 20;
+
         private void Awake()
         {
             Log = Logger;
@@ -29,11 +31,28 @@ namespace OWO_REPO
             harmony.PatchAll();
         }
 
-        
+        public static bool IsLocalPlayerNear(float range, Vector3 position)
+        {
+            foreach (PlayerAvatar playerAvatar in GameDirector.instance.PlayerList)
+            {
+                if (Traverse.Create(playerAvatar).Field("IsLocal").GetValue<bool>())
+                {
+                    Vector3 position2 = playerAvatar.PlayerVisionTarget.VisionTransform.position;
+                    float num = Vector3.Distance(position, position2);
+                    if (num > range)
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+                continue;
+            }
+            return false;
+        }
 
         #region Player
 
-            #region PlayerController
+        #region PlayerController
 
         [HarmonyPatch(typeof(PlayerController), "ChangeState")]
         public class OnChangeState
@@ -158,6 +177,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PropaneTankTrap __instance)
             {
+                if(IsLocalPlayerNear(explosionDistance, __instance.transform.position))
                     owoSkin.LOG($"PropaneTankTrap Explode");
             }
         }
@@ -168,7 +188,8 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(BarrelValuable __instance)
             {
-                owoSkin.LOG($"BarrelValuable Explode");
+                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                    owoSkin.LOG($"BarrelValuable Explode");
             }
         }
 
@@ -178,7 +199,8 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(FlamethrowerValuable __instance)
             {
-                owoSkin.LOG($"FlamethrowerValuable Explode");
+                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                    owoSkin.LOG($"FlamethrowerValuable Explode");
             }
         }
 
@@ -188,7 +210,8 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PowerCrystalValuable __instance)
             {
-                owoSkin.LOG($"PowerCrystalValuable Explode");
+                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                    owoSkin.LOG($"PowerCrystalValuable Explode");
             }
         }
 
@@ -350,7 +373,7 @@ namespace OWO_REPO
             {
                 bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
                 if (gameStateStartImpulse)
-                owoSkin.LOG($"GameDirector gameStgameStateOutroateLoad"); //Cuando sale el camion
+                owoSkin.LOG($"GameDirector gameStateOutro"); //Cuando sale el camion
             }
         }
 
