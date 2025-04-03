@@ -158,16 +158,6 @@ namespace OWO_REPO
             }
         }
 
-        [HarmonyPatch(typeof(ExtractionPoint), "ButtonToggle")]
-        public class OnButtonToggle
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"ExtractionPoint ButtonToggle");
-            }
-        }
-
         [HarmonyPatch(typeof(MoneyValuable), "MoneyBurst")]
         public class OnMoneyBurst
         {
