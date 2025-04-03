@@ -297,6 +297,30 @@ namespace OWO_REPO
             }
         }
 
+        [HarmonyPatch(typeof(GameDirector), "gameStateOutro")]
+        public class OngameStateOutro
+        {
+            [HarmonyPostfix]
+            public static void Prefix(GameDirector __instance)
+            {
+                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
+                if (gameStateStartImpulse)
+                owoSkin.LOG($"GameDirector gameStgameStateOutroateLoad");
+            }
+        }
+
+        [HarmonyPatch(typeof(GameDirector), "gameStateEnd")]
+        public class OngameStateEnd
+        {
+            [HarmonyPostfix]
+            public static void Prefix(GameDirector __instance)
+            {
+                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
+                if (gameStateStartImpulse)
+                owoSkin.LOG($"GameDirector gameStateEnd");
+            }
+        }
+
 
 
 
