@@ -211,7 +211,9 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                owoSkin.LOG($"Cauldron Explosion");
+                if (!owoSkin.suitEnabled) return;
+
+                owoSkin.Feel("Cauldron Explosion",2);
             }
         }
         #endregion

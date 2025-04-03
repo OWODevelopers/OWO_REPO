@@ -19,7 +19,9 @@ namespace OWO_REPO
 
         public static OWOSkin owoSkin;
         public static OWOInteractables interactables;
+        public static bool playing = false;
         public static float explosionDistance = 20;
+        public static string lastPlayerState = "";
 
         private void Awake()
         {
@@ -61,7 +63,14 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PlayerController __instance)
             {
-                if (__instance.Crouching) owoSkin.LOG($"PlayerController ChangeState - Crouching");
+                if (owoSkin.suitEnabled && __instance.Crouching && lastPlayerState != "crouching")
+                {
+                    lastPlayerState = "crouching";
+                    owoSkin.Feel("Crouch", 2);
+                }
+
+                if (!__instance.Crouching && !__instance.Crawling) lastPlayerState = "standing";
+
                 if (__instance.sprinting) owoSkin.LOG($"PlayerController ChangeState - sprinting");
                 if (__instance.Crawling) owoSkin.LOG($"PlayerController ChangeState - Crawling");
                 if (__instance.Sliding) owoSkin.LOG($"PlayerController ChangeState - Sliding");
@@ -119,7 +128,15 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                owoSkin.LOG($"Playerhealth Death");
+                if (owoSkin.suitEnabled && playing)
+                {
+                    playing = false;
+
+                    owoSkin.StopAllHapticFeedback();
+                    owoSkin.Feel("Death", 4);
+                }
+
+                //owoSkin.LOG($"Playerhealth Death");
             }
         }
         #endregion
@@ -150,7 +167,9 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                owoSkin.LOG($"CameraJump Jump");
+                if (!owoSkin.suitEnabled) return;
+
+                owoSkin.Feel("Jump", 2);
             }
         }
 
@@ -160,7 +179,10 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                owoSkin.LOG($"CameraJump Land");
+                if (!owoSkin.suitEnabled) return;
+
+                if(playing) owoSkin.Feel("Jump", 2);
+                else playing = true;
             }
         }
 
