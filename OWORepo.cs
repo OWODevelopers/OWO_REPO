@@ -203,7 +203,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if ((!GameManager.Multiplayer() || __instance.photonView.IsMine)) 
+                if (__instance.isLocal) 
                 {
                     ItemVolume componentInChildren = __instance.GetComponentInChildren<ItemVolume>();
                     if ((bool)componentInChildren)
@@ -221,7 +221,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
+                if((__instance.isLocal))
                     owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }

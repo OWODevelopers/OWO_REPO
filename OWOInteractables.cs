@@ -239,13 +239,15 @@ namespace OWO_REPO
             {
                 bool flag = Traverse.Create(__instance).Field("flag").GetValue<bool>();
                 PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
-                PlayerAvatar lastPlayerGrabbing = Traverse.Create(physGrabObject).Field("lastPlayerGrabbing").GetValue<PlayerAvatar>();
 
-                if (!GameManager.Multiplayer() || lastPlayerGrabbing.photonView.IsMine)
+                foreach (PhysGrabber physGrabber in physGrabObject.playerGrabbing)
                 {
-                    if (flag)
+                    if (physGrabber.isLocal)
                     {
-                        owoSkin.LOG($"ValuableLovePotion StateIdle");
+                        if (flag)
+                        {
+                            owoSkin.LOG($"ValuableLovePotion StateIdle");
+                        }
                     }
                 }
             }
