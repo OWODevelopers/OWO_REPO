@@ -93,6 +93,17 @@ namespace OWO_REPO
                     owoSkin.LOG($"ToiletFun Explosion");
             }
         }
+        
+        [HarmonyPatch(typeof(ItemMeleeInflatableHammer), "ExplosionRPC")]
+        public class OnItemMeleeInflatableHammerExplosionRPC
+        {
+            [HarmonyPostfix]
+            public static void Postfix(ItemMeleeInflatableHammer __instance)
+            {
+                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
+                    owoSkin.LOG($"ItemMeleeInflatableHammer ExplosionRPC");
+            }
+        }
 
         #region Grenades
 
