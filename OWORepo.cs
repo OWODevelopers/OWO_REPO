@@ -18,8 +18,7 @@ namespace OWO_REPO
 #pragma warning restore CS0109
 
         public static OWOSkin owoSkin;
-        public static OWOInteractables interactables;
-        public static bool playing = false;
+        public static OWOInteractables interactables;        
         public static float explosionDistance = 20;
         public static string lastPlayerState = "";
 
@@ -63,7 +62,9 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PlayerController __instance)
             {
-                if (owoSkin.suitEnabled && __instance.Crouching && lastPlayerState != "crouching")
+                if (!owoSkin.CanFeel()) return;
+
+                if ( __instance.Crouching && lastPlayerState != "crouching")
                 {
                     lastPlayerState = "crouching";
                     owoSkin.Feel("Crouch", 2);
@@ -98,7 +99,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PlayerHealth __instance, int damage, bool savingGrace, int enemyIndex = -1)
             {
-                if (enemyIndex == -1) return; // Animación de daño para escenas
+                if (!owoSkin.CanFeel() || enemyIndex == -1) return; // No sentimos si no estamos jugando
 
                 PhotonView photonView = Traverse.Create(__instance).Field("photonView").GetValue<PhotonView>();
                 if (damage > 0 && !PlayerAvatar.instance.photonView.IsMine) 
@@ -118,6 +119,8 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(int healAmount, bool effect = true)
             {
+                //if (!owoSkin.CanFeel()) return;
+                
                 owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}"); //it works!
             }
         }
@@ -128,9 +131,9 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                if (owoSkin.suitEnabled && playing)
+                if (owoSkin.CanFeel())
                 {
-                    playing = false;
+                    owoSkin.playing = false;
 
                     owoSkin.StopAllHapticFeedback();
                     owoSkin.Feel("Death", 4);
@@ -167,7 +170,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                if (!owoSkin.suitEnabled) return;
+                if (!owoSkin.CanFeel()) return;
 
                 owoSkin.Feel("Jump", 2);
             }
@@ -181,8 +184,8 @@ namespace OWO_REPO
             {
                 if (!owoSkin.suitEnabled) return;
 
-                if(playing) owoSkin.Feel("Jump", 2);
-                else playing = true;
+                if(owoSkin.playing) owoSkin.Feel("Landing", 2); //Activamos el inicio del juego
+                else owoSkin.playing = true;
             }
         }
 
@@ -225,16 +228,13 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if (__instance.isLocal) 
+                if (__instance.isLocal && owoSkin.CanFeel()) 
                 {
                     PhysGrabObject grabbedPhysGrabObject = Traverse.Create(__instance).Field("grabbedPhysGrabObject").GetValue<PhysGrabObject>();
                     ItemVolume componentInChildren = grabbedPhysGrabObject.GetComponentInChildren<ItemVolume>();
-                    if ((bool)componentInChildren)
-                    {
-                        owoSkin.BeamIntensity(componentInChildren.itemVolume);
+                        owoSkin.BeamIntensity(itemVolume.medium);
                         owoSkin.StartBeam();
-                        owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
-                    }
+                        //owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
                 }
             }
         }
@@ -245,8 +245,9 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if((__instance.isLocal))
-                    owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
+                if(__instance.isLocal && owoSkin.CanFeel()) owoSkin.StopBeam();
+                    
+                //owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }
 

@@ -12,6 +12,7 @@ namespace OWO_REPO
     public class OWOSkin
     {
         public bool suitEnabled = false;
+        public bool playing = false;
         public bool beamIsActive = false;
         private int beamIntensity = 30;
         public Dictionary<String, Sensation> FeedbackMap = new Dictionary<String, Sensation>();
@@ -196,6 +197,11 @@ namespace OWO_REPO
             StopBeam();
 
             OWO.Stop();
+        }
+
+        public bool CanFeel() 
+        {
+            return suitEnabled && playing;
         }
     }
 }
