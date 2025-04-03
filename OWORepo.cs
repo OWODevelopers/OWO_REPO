@@ -242,45 +242,29 @@ namespace OWO_REPO
 
         #region GrabBeam
 
-        [HarmonyPatch(typeof(PhysGrabBeam), "Start")]
-        public class OnStart
+        [HarmonyPatch(typeof(PhysGrabber), "PhysGrabStartEffects")]
+        public class OnPhysGrabStartEffects
         {
             [HarmonyPostfix]
-            public static void Postfix()
+            public static void Postfix(PhysGrabber __instance)
             {
-                owoSkin.LOG($"PhysGrabBeam Start");
+                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
+                    owoSkin.LOG($"PhysGrabber PhysGrabStartEffects");
             }
         }
 
-        [HarmonyPatch(typeof(PhysGrabBeam), "OnEnable")]
-        public class OnOnEnable
+        [HarmonyPatch(typeof(PhysGrabber), "PhysGrabEndEffects")]
+        public class OnPhysGrabEndEffects
         {
             [HarmonyPostfix]
-            public static void Postfix(PhysGrabBeam __instance)
+            public static void Postfix(PhysGrabber __instance)
             {
-                if (__instance.playerAvatar.photonView.IsMine) owoSkin.LOG($"PhysGrabBeam OnEnable - isMine");
+                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
+                    owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }
 
-        [HarmonyPatch(typeof(PhysGrabBeam), "OnDisable")]
-        public class OnOnDisable
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PhysGrabBeam __instance)
-            {
-                if (__instance.playerAvatar.photonView.IsMine) owoSkin.LOG($"PhysGrabBeam OnDisable - isMine");
-            }
-        }
-
-        [HarmonyPatch(typeof(PhysGrabObjectImpactDetector), "BreakRPC")]
-        public class OnBreakRPC
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"PhysGrabObjectImpactDetector BreakRPC");
-            }
-        }
+        
 
         #endregion
 
