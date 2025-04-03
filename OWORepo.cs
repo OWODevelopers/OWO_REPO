@@ -30,7 +30,7 @@ namespace OWO_REPO
 
         #region Player
 
-        #region PlayerController
+            #region PlayerController
 
         [HarmonyPatch(typeof(PlayerController), "ChangeState")]
         public class OnChangeState
@@ -58,7 +58,7 @@ namespace OWO_REPO
 
         #endregion
 
-        #region PlayerHealth
+            #region PlayerHealth
 
         [HarmonyPatch(typeof(PlayerHealth), "Hurt")]
         public class OnHurt
@@ -145,10 +145,15 @@ namespace OWO_REPO
 
         #endregion
 
-
         #region WorldInteractable
 
-        #region Cauldron
+            #region Explosives
+
+
+
+        #endregion
+
+            #region Cauldron
         [HarmonyPatch(typeof(Cauldron), "CookStart")]
         public class OnCookStart
         {
@@ -180,6 +185,7 @@ namespace OWO_REPO
         }
         #endregion
 
+            #region Shop
         [HarmonyPatch(typeof(ExtractionPoint), "OnShopClick")]
         public class OnOnShopClick
         {
@@ -199,7 +205,9 @@ namespace OWO_REPO
                 owoSkin.LOG($"MoneyValuable MoneyBurst");
             }
         }
-        
+        #endregion
+
+            #region Valuable
         [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
         public class OnPhysObjectHurt
         {
@@ -211,6 +219,7 @@ namespace OWO_REPO
                 owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
             }
         }
+        #endregion
 
         #endregion
 
@@ -275,7 +284,6 @@ namespace OWO_REPO
 
 
         #endregion
-
 
         #region GameState
 
