@@ -61,12 +61,17 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PlayerHealth __instance, int damage, bool savingGrace, int enemyIndex = -1)
             {
+                if (enemyIndex == -1) return; // Animación de daño para escenas
 
                 PhotonView photonView = Traverse.Create(__instance).Field("photonView").GetValue<PhotonView>();
+                if (damage > 0 && !PlayerAvatar.instance.photonView.IsMine) 
+                {
+                    owoSkin.LOG($"Hurt: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
+                }
 
-                owoSkin.LOG($"Playerhealth Hurt - Damage: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
-                owoSkin.LOG($"Playerhealth Hurt - isMine: {photonView.IsMine}");
-                owoSkin.LOG($"Prueba yo - {PlayerAvatar.instance.photonView.IsMine}");
+                //owoSkin.LOG($"Playerhealth Hurt - Damage: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
+                //owoSkin.LOG($"Playerhealth Hurt - isMine: {photonView.IsMine}");
+                //owoSkin.LOG($"Prueba yo - {PlayerAvatar.instance.photonView.IsMine}");
             }
         }
 
