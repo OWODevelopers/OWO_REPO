@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using static HurtCollider;
 using static SemiFunc;
+using System.Collections.Generic;
 
 
 namespace OWO_REPO
@@ -27,6 +28,8 @@ namespace OWO_REPO
             var harmony = new Harmony("owo.patch.repo");
             harmony.PatchAll();
         }
+
+        
 
         #region Player
 
@@ -147,13 +150,53 @@ namespace OWO_REPO
 
         #region WorldInteractable
 
-            #region Explosives
+        #region Explosives
+
+        [HarmonyPatch(typeof(PropaneTankTrap), "Explode")]
+        public class OnPropaneTankTrapExplode
+        {
+            [HarmonyPostfix]
+            public static void Postfix(PropaneTankTrap __instance)
+            {
+                    owoSkin.LOG($"PropaneTankTrap Explode");
+            }
+        }
+
+        [HarmonyPatch(typeof(BarrelValuable), "Explode")]
+        public class OnBarrelValuableExplode
+        {
+            [HarmonyPostfix]
+            public static void Postfix(BarrelValuable __instance)
+            {
+                owoSkin.LOG($"BarrelValuable Explode");
+            }
+        }
+
+        [HarmonyPatch(typeof(FlamethrowerValuable), "Explode")]
+        public class OnFlamethrowerValuableExplode
+        {
+            [HarmonyPostfix]
+            public static void Postfix(FlamethrowerValuable __instance)
+            {
+                owoSkin.LOG($"FlamethrowerValuable Explode");
+            }
+        }
+
+        [HarmonyPatch(typeof(PowerCrystalValuable), "Explode")]
+        public class OnPowerCrystalValuableExplode
+        {
+            [HarmonyPostfix]
+            public static void Postfix(PowerCrystalValuable __instance)
+            {
+                owoSkin.LOG($"PowerCrystalValuable Explode");
+            }
+        }
 
 
 
         #endregion
 
-            #region Cauldron
+        #region Cauldron
         [HarmonyPatch(typeof(Cauldron), "CookStart")]
         public class OnCookStart
         {
