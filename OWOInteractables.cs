@@ -216,7 +216,7 @@ namespace OWO_REPO
         }
         #endregion
 
-        #region Valuable
+        #region BreakObject
         [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
         public class OnPhysObjectHurt
         {
@@ -230,7 +230,7 @@ namespace OWO_REPO
         }
         #endregion
 
-        
+        #region Valuables
         [HarmonyPatch(typeof(ValuableLovePotion), "StateIdle")]
         public class OnValuableLovePotionStateIdle
         {
@@ -250,6 +250,8 @@ namespace OWO_REPO
                 }
             }
         }
+
+        #endregion
 
         #endregion
 
