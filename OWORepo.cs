@@ -205,13 +205,13 @@ namespace OWO_REPO
             {
                 if (__instance.isLocal) 
                 {
-                    ItemVolume componentInChildren = __instance.GetComponentInChildren<ItemVolume>();
+                    PhysGrabObject grabbedPhysGrabObject = Traverse.Create(__instance).Field("grabbedPhysGrabObject").GetValue<PhysGrabObject>();
+                    ItemVolume componentInChildren = grabbedPhysGrabObject.GetComponentInChildren<ItemVolume>();
                     if ((bool)componentInChildren)
                     {
                         owoSkin.BeamIntensity(componentInChildren.itemVolume);
                         owoSkin.StartBeam();
                         owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
-                    
                     }
                 }
             }
