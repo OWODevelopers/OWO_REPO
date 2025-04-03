@@ -242,50 +242,68 @@ namespace OWO_REPO
 
         #region GrabBeam
 
-        [HarmonyPatch(typeof(PhysGrabBeam), "Start")]
-        public class OnStart
+        [HarmonyPatch(typeof(PhysGrabber), "PhysGrabStartEffects")]
+        public class OnPhysGrabStartEffects
         {
             [HarmonyPostfix]
-            public static void Postfix()
+            public static void Postfix(PhysGrabber __instance)
             {
-                owoSkin.LOG($"PhysGrabBeam Start");
+                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
+                    owoSkin.LOG($"PhysGrabber PhysGrabStartEffects");
             }
         }
 
-        [HarmonyPatch(typeof(PhysGrabBeam), "OnEnable")]
-        public class OnOnEnable
+        [HarmonyPatch(typeof(PhysGrabber), "PhysGrabEndEffects")]
+        public class OnPhysGrabEndEffects
         {
             [HarmonyPostfix]
-            public static void Postfix(PhysGrabBeam __instance)
+            public static void Postfix(PhysGrabber __instance)
             {
-                if (__instance.playerAvatar.photonView.IsMine) owoSkin.LOG($"PhysGrabBeam OnEnable - isMine");
+                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
+                    owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }
 
-        [HarmonyPatch(typeof(PhysGrabBeam), "OnDisable")]
-        public class OnOnDisable
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PhysGrabBeam __instance)
-            {
-                if (__instance.playerAvatar.photonView.IsMine) owoSkin.LOG($"PhysGrabBeam OnDisable - isMine");
-            }
-        }
-
-        [HarmonyPatch(typeof(PhysGrabObjectImpactDetector), "BreakRPC")]
-        public class OnBreakRPC
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"PhysGrabObjectImpactDetector BreakRPC");
-            }
-        }
         
+
         #endregion
 
-        
 
+        [HarmonyPatch(typeof(GameDirector), "gameStateLoad")]
+        public class OngameStateLoad
+        {
+            [HarmonyPostfix]
+            public static void Prefix(GameDirector __instance)
+            {
+                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
+                if (gameStateStartImpulse)
+                owoSkin.LOG($"GameDirector gameStateLoad");
+            }
+        }
+
+        [HarmonyPatch(typeof(GameDirector), "gameStateOutro")]
+        public class OngameStateOutro
+        {
+            [HarmonyPostfix]
+            public static void Prefix(GameDirector __instance)
+            {
+                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
+                if (gameStateStartImpulse)
+                owoSkin.LOG($"GameDirector gameStgameStateOutroateLoad");
+            }
+        }
+
+        [HarmonyPatch(typeof(GameDirector), "gameStateEnd")]
+        public class OngameStateEnd
+        {
+            [HarmonyPostfix]
+            public static void Prefix(GameDirector __instance)
+            {
+                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
+                if (gameStateStartImpulse)
+                owoSkin.LOG($"GameDirector gameStateEnd");
+            }
+        }
 
 
 
