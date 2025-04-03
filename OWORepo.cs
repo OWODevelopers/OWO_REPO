@@ -231,7 +231,7 @@ namespace OWO_REPO
                 if (!upgradeDone)
                 {
                     PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromPhotonID(playerTogglePhotonID);
-                    if (playerAvatar.photonView.IsMine)
+                    if (playerAvatar.photonView.IsMine || !GameManager.Multiplayer())
                     {
                         owoSkin.LOG($"YO - ItemUpgrade PlayerUpgrade - YO");
                     }
