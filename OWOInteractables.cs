@@ -45,7 +45,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PropaneTankTrap __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
                     owoSkin.LOG($"PropaneTankTrap Explode");
             }
         }
@@ -56,7 +56,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(BarrelValuable __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
                     owoSkin.LOG($"BarrelValuable Explode");
             }
         }
@@ -67,7 +67,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(FlamethrowerValuable __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
                     owoSkin.LOG($"FlamethrowerValuable Explode");
             }
         }
@@ -78,7 +78,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PowerCrystalValuable __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
                     owoSkin.LOG($"PowerCrystalValuable Explode");
             }
         }
@@ -87,10 +87,27 @@ namespace OWO_REPO
         public class OnToiletFunExplosion
         {
             [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
+            public static void Postfix(ToiletFun __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
+                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
                     owoSkin.LOG($"ToiletFun Explosion");
+            }
+        }
+        
+        [HarmonyPatch(typeof(ItemGrenade), "TickEnd")]
+        public class OnItemGrenadeTickEnd
+        {
+            [HarmonyPostfix]
+            public static void Postfix(ItemGrenade __instance)
+            {
+                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
+
+                ItemEquippable itemEquippable = Traverse.Create(__instance).Field("itemEquippable").GetValue<ItemEquippable>();
+                bool isEquipped = Traverse.Create(itemEquippable).Field("isEquipped").GetValue<bool>();
+
+                if (isEquipped) return;
+                
+                owoSkin.LOG($"ItemGrenade TickEnd");
             }
         }
 
@@ -188,6 +205,22 @@ namespace OWO_REPO
         }
         #endregion
 
+        #region Valuable
+        [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
+        public class OnPhysObjectHurt
+        {
+            [HarmonyPostfix]
+            public static void Postfix(PhysGrabObject physGrabObject, BreakImpact impact, float hitForce, float hitTorque, bool apply, bool destroyLaunch)
+            {
+                PhotonView photonView = Traverse.Create(physGrabObject).Field("photonView").GetValue<PhotonView>();
+
+                owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
+            }
+        }
+        #endregion
+
+        #endregion
+
         #region Shop
         [HarmonyPatch(typeof(ExtractionPoint), "OnShopClick")]
         public class OnOnShopClick
@@ -208,22 +241,6 @@ namespace OWO_REPO
                 owoSkin.LOG($"MoneyValuable MoneyBurst");
             }
         }
-        #endregion
-
-        #region Valuable
-        [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
-        public class OnPhysObjectHurt
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PhysGrabObject physGrabObject, BreakImpact impact, float hitForce, float hitTorque, bool apply, bool destroyLaunch)
-            {
-                PhotonView photonView = Traverse.Create(physGrabObject).Field("photonView").GetValue<PhotonView>();
-
-                owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
-            }
-        }
-        #endregion
-
         #endregion
     }
 }
