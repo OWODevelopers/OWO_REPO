@@ -12,6 +12,8 @@ namespace OWO_REPO
     public class OWOSkin
     {
         public bool suitEnabled = false;
+        public bool beamIsActive = false;
+        private int beamIntensity = 30;
         public Dictionary<String, Sensation> FeedbackMap = new Dictionary<String, Sensation>();
 
         public OWOSkin()
@@ -138,6 +140,62 @@ namespace OWO_REPO
             }
 
             else LOG("Feedback not registered: " + key);
+        }
+
+        public void BeamIntensity(SemiFunc.itemVolume volume) 
+        {
+            switch(volume) 
+            {
+                case SemiFunc.itemVolume.large:
+                case SemiFunc.itemVolume.large_wide:
+                case SemiFunc.itemVolume.large_plus:
+                case SemiFunc.itemVolume.large_high:
+                    beamIntensity = 80;
+                    break;
+                case SemiFunc.itemVolume.power_crystal:
+                    beamIntensity = 50;
+                    break;
+                case SemiFunc.itemVolume.upgrade:
+                case SemiFunc.itemVolume.healthPack:
+                    beamIntensity = 25;
+                    break;
+                default:
+                    beamIntensity = 30;
+                    break;
+            }
+        }
+
+        #region Beam loop
+
+        public void StartBeam()
+        {
+            if (beamIsActive) return;
+
+            beamIsActive = true;
+            BeamFuncAsync();
+        }
+
+        public void StopBeam()
+        {
+            beamIsActive=false;
+        }
+
+        public async Task BeamFuncAsync()
+        {
+            while (beamIsActive)
+            {
+                Feel("Grab Beam", 0, beamIntensity);
+                await Task.Delay(1000);
+            }
+        }
+
+        #endregion
+
+        public void StopAllHapticFeedback()
+        {
+            StopBeam();
+
+            OWO.Stop();
         }
     }
 }

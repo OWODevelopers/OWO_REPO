@@ -208,6 +208,8 @@ namespace OWO_REPO
                     ItemVolume componentInChildren = __instance.GetComponentInChildren<ItemVolume>();
                     if ((bool)componentInChildren)
                     {
+                        owoSkin.BeamIntensity(componentInChildren.itemVolume);
+                        owoSkin.StartBeam();
                         owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
                     
                     }
