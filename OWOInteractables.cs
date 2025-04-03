@@ -230,6 +230,27 @@ namespace OWO_REPO
         }
         #endregion
 
+        
+        [HarmonyPatch(typeof(ValuableLovePotion), "StateIdle")]
+        public class OnValuableLovePotionStateIdle
+        {
+            [HarmonyPostfix]
+            public static void Postfix(ValuableLovePotion __instance)
+            {
+                bool flag = Traverse.Create(__instance).Field("flag").GetValue<bool>();
+                PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
+                PlayerAvatar lastPlayerGrabbing = Traverse.Create(physGrabObject).Field("lastPlayerGrabbing").GetValue<PlayerAvatar>();
+
+                if (!GameManager.Multiplayer() || lastPlayerGrabbing.photonView.IsMine)
+                {
+                    if (flag)
+                    {
+                        owoSkin.LOG($"ValuableLovePotion StateIdle");
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Shop
