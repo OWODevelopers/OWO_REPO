@@ -10,7 +10,7 @@ namespace OWO_REPO
         static OWOSkin owoSkin;
         public static float explosionDistance = 20;
 
-        public OWOInteractables(OWOSkin owoSkinGiven, float explosionReference) 
+        public OWOInteractables(OWOSkin owoSkinGiven, float explosionReference)
         {
             owoSkin = owoSkinGiven;
             explosionDistance = explosionReference;
@@ -46,7 +46,7 @@ namespace OWO_REPO
             public static void Postfix(PropaneTankTrap __instance)
             {
                 if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                    owoSkin.LOG($"PropaneTankTrap Explode");
+                owoSkin.LOG($"PropaneTankTrap Explode");
             }
         }
 
@@ -57,7 +57,7 @@ namespace OWO_REPO
             public static void Postfix(BarrelValuable __instance)
             {
                 if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                    owoSkin.LOG($"BarrelValuable Explode");
+                owoSkin.LOG($"BarrelValuable Explode");
             }
         }
 
@@ -68,7 +68,7 @@ namespace OWO_REPO
             public static void Postfix(FlamethrowerValuable __instance)
             {
                 if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                    owoSkin.LOG($"FlamethrowerValuable Explode");
+                owoSkin.LOG($"FlamethrowerValuable Explode");
             }
         }
 
@@ -79,7 +79,7 @@ namespace OWO_REPO
             public static void Postfix(PowerCrystalValuable __instance)
             {
                 if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                    owoSkin.LOG($"PowerCrystalValuable Explode");
+                owoSkin.LOG($"PowerCrystalValuable Explode");
             }
         }
 
@@ -90,10 +90,10 @@ namespace OWO_REPO
             public static void Postfix(ToiletFun __instance)
             {
                 if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                    owoSkin.LOG($"ToiletFun Explosion");
+                owoSkin.LOG($"ToiletFun Explosion");
             }
         }
-        
+
         [HarmonyPatch(typeof(ItemMeleeInflatableHammer), "ExplosionRPC")]
         public class OnItemMeleeInflatableHammerExplosionRPC
         {
@@ -101,7 +101,7 @@ namespace OWO_REPO
             public static void Postfix(ItemMeleeInflatableHammer __instance)
             {
                 if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                    owoSkin.LOG($"ItemMeleeInflatableHammer ExplosionRPC");
+                owoSkin.LOG($"ItemMeleeInflatableHammer ExplosionRPC");
             }
         }
 
@@ -239,16 +239,11 @@ namespace OWO_REPO
             {
                 bool flag = Traverse.Create(__instance).Field("flag").GetValue<bool>();
                 PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
+                bool heldByLocalPlayer = Traverse.Create(__instance).Field("heldByLocalPlayer").GetValue<bool>();
 
-                foreach (PhysGrabber physGrabber in physGrabObject.playerGrabbing)
+                if (heldByLocalPlayer && flag)
                 {
-                    if (physGrabber.isLocal)
-                    {
-                        if (flag)
-                        {
-                            owoSkin.LOG($"ValuableLovePotion StateIdle");
-                        }
-                    }
+                    owoSkin.LOG($"ValuableLovePotion StateIdle");
                 }
             }
         }
