@@ -35,9 +35,13 @@ namespace OWO_REPO
         public class OnChangeState
         {
             [HarmonyPostfix]
-            public static void Postfix()
+            public static void Postfix(PlayerController __instance)
             {
-                owoSkin.LOG($"PlayerController ChangeState");
+                if (__instance.Crouching) owoSkin.LOG($"PlayerController ChangeState - Crouching");
+                if (__instance.sprinting) owoSkin.LOG($"PlayerController ChangeState - sprinting");
+                if (__instance.Crawling) owoSkin.LOG($"PlayerController ChangeState - Crawling");
+                if (__instance.Sliding) owoSkin.LOG($"PlayerController ChangeState - Sliding");
+                if (__instance.moving) owoSkin.LOG($"PlayerController ChangeState - moving");
             }
         }
         
@@ -115,6 +119,28 @@ namespace OWO_REPO
                 owoSkin.LOG($"PlayerReviveEffects Trigger");
             }
         }
+
+        [HarmonyPatch(typeof(CameraJump), "Jump")]
+        public class OnJump
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"CameraJump Jump");
+            }
+        }
+
+        [HarmonyPatch(typeof(CameraJump), "Land")]
+        public class OnLand
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                owoSkin.LOG($"CameraJump Land");
+            }
+        }
+
+
 
         #endregion
 
@@ -230,9 +256,19 @@ namespace OWO_REPO
         public class OnOnEnable
         {
             [HarmonyPostfix]
-            public static void Postfix()
+            public static void Postfix(PhysGrabBeam __instance)
             {
-                owoSkin.LOG($"PhysGrabBeam OnEnable");
+                if (__instance.playerAvatar.photonView.IsMine) owoSkin.LOG($"PhysGrabBeam OnEnable - isMine");
+            }
+        }
+
+        [HarmonyPatch(typeof(PhysGrabBeam), "OnDisable")]
+        public class OnOnDisable
+        {
+            [HarmonyPostfix]
+            public static void Postfix(PhysGrabBeam __instance)
+            {
+                if (__instance.playerAvatar.photonView.IsMine) owoSkin.LOG($"PhysGrabBeam OnDisable - isMine");
             }
         }
 
