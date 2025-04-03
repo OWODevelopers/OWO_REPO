@@ -281,11 +281,21 @@ namespace OWO_REPO
                 owoSkin.LOG($"PhysGrabObjectImpactDetector BreakRPC");
             }
         }
-        
+
         #endregion
 
-        
 
+        [HarmonyPatch(typeof(GameDirector), "gameStateLoad")]
+        public class OngameStateLoad
+        {
+            [HarmonyPostfix]
+            public static void Prefix(GameDirector __instance)
+            {
+                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
+                if (gameStateStartImpulse)
+                owoSkin.LOG($"GameDirector gameStateLoad");
+            }
+        }
 
 
 
