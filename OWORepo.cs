@@ -18,7 +18,7 @@ namespace OWO_REPO
 #pragma warning restore CS0109
 
         public static OWOSkin owoSkin;
-
+        public static OWOInteractables interactables;
         public static float explosionDistance = 20;
 
         private void Awake()
@@ -26,6 +26,7 @@ namespace OWO_REPO
             Log = Logger;
             Logger.LogMessage("OWO_REPO plugin is loaded!");
             owoSkin = new OWOSkin();
+            interactables = new OWOInteractables(owoSkin, explosionDistance);
 
             var harmony = new Harmony("owo.patch.repo");
             harmony.PatchAll();
@@ -164,197 +165,6 @@ namespace OWO_REPO
         }
 
 
-
-        #endregion
-
-        #region WorldInteractable
-
-        #region Explosives
-
-        [HarmonyPatch(typeof(PropaneTankTrap), "Explode")]
-        public class OnPropaneTankTrapExplode
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PropaneTankTrap __instance)
-            {
-                if(IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"PropaneTankTrap Explode");
-            }
-        }
-
-        [HarmonyPatch(typeof(BarrelValuable), "Explode")]
-        public class OnBarrelValuableExplode
-        {
-            [HarmonyPostfix]
-            public static void Postfix(BarrelValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"BarrelValuable Explode");
-            }
-        }
-
-        [HarmonyPatch(typeof(FlamethrowerValuable), "Explode")]
-        public class OnFlamethrowerValuableExplode
-        {
-            [HarmonyPostfix]
-            public static void Postfix(FlamethrowerValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"FlamethrowerValuable Explode");
-            }
-        }
-
-        [HarmonyPatch(typeof(PowerCrystalValuable), "Explode")]
-        public class OnPowerCrystalValuableExplode
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"PowerCrystalValuable Explode");
-            }
-        }
-
-        [HarmonyPatch(typeof(ToiletFun), "Explosion")]
-        public class OnToiletFunExplosion
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ToiletFun Explosion");
-            }
-        }
-
-        #region Grenades
-
-        [HarmonyPatch(typeof(ItemGrenadeDuctTaped), "Explosion")]
-        public class OnItemGrenadeDuctTapedExplosion
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeDuctTaped Explosion");
-            }
-        }
-
-        [HarmonyPatch(typeof(ItemGrenadeExplosive), "Explosion")]
-        public class OnItemGrenadeExplosiveExplosion
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeExplosive Explosion");
-            }
-        }
-        
-        [HarmonyPatch(typeof(ItemGrenadeHuman), "Explosion")]
-        public class OnItemGrenadeHumanExplosion
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeHuman Explosion");
-            }
-        }
-        
-        [HarmonyPatch(typeof(ItemGrenadeShockwave), "Explosion")]
-        public class OnItemGrenadeShockwave
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeShockwave Explosion");
-            }
-        }
-        
-        [HarmonyPatch(typeof(ItemGrenadeStun), "Explosion")]
-        public class OnItemGrenadeStun
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PowerCrystalValuable __instance)
-            {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeStun Explosion");
-            }
-        }
-
-        #endregion
-
-
-        #endregion
-
-        #region Cauldron
-        [HarmonyPatch(typeof(Cauldron), "CookStart")]
-        public class OnCookStart
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"Cauldron CookStart");
-            }
-        }
-
-        [HarmonyPatch(typeof(Cauldron), "EndCook")]
-        public class OnEndCook
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"Cauldron EndCook");
-            }
-        }
-
-        [HarmonyPatch(typeof(Cauldron), "Explosion")]
-        public class OnExplode
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"Cauldron Explosion");
-            }
-        }
-        #endregion
-
-            #region Shop
-        [HarmonyPatch(typeof(ExtractionPoint), "OnShopClick")]
-        public class OnOnShopClick
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"ExtractionPoint OnShopClick"); //It works!
-            }
-        }
-
-        [HarmonyPatch(typeof(MoneyValuable), "MoneyBurst")]
-        public class OnMoneyBurst
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"MoneyValuable MoneyBurst");
-            }
-        }
-        #endregion
-
-            #region Valuable
-        [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
-        public class OnPhysObjectHurt
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PhysGrabObject physGrabObject, BreakImpact impact, float hitForce, float hitTorque, bool apply, bool destroyLaunch)
-            {
-                PhotonView photonView = Traverse.Create(physGrabObject).Field("photonView").GetValue<PhotonView>();
-
-                owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
-            }
-        }
-        #endregion
 
         #endregion
 

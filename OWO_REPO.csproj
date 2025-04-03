@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OWOInteractables.cs" />
     <Compile Include="OWORepo.cs" />
     <Compile Include="OWOSkin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
