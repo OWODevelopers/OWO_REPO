@@ -203,7 +203,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if ((!GameManager.Multiplayer() || __instance.photonView.IsMine)) 
+                if (__instance.isLocal) 
                 {
                     ItemVolume componentInChildren = __instance.GetComponentInChildren<ItemVolume>();
                     if ((bool)componentInChildren)
@@ -223,7 +223,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                if((!GameManager.Multiplayer() || __instance.photonView.IsMine))
+                if((__instance.isLocal))
                     owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }
@@ -282,6 +282,21 @@ namespace OWO_REPO
                 bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
                 if (gameStateStartImpulse)
                 owoSkin.LOG($"GameDirector gameStateEnd");
+            }
+        }
+
+        #endregion
+
+        #region Laser
+
+        [HarmonyPatch(typeof(SemiLaser), "LaserActive")]
+        public class OnLaserActive
+        {
+            [HarmonyPostfix]
+            public static void PostFix(SemiLaser __instance, Vector3 _startPosition, Vector3 _endPosition, bool _isHitting)
+            {
+                if(IsLocalPlayerNear(explosionDistance, _startPosition) || IsLocalPlayerNear(explosionDistance, _endPosition))
+                    owoSkin.LOG($"SemiLaser LaserActive");
             }
         }
 
