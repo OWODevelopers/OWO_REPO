@@ -289,7 +289,7 @@ namespace OWO_REPO
             {
                 bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
                 if (gameStateStartImpulse)
-                owoSkin.LOG($"GameDirector gameStgameStateOutroateLoad");
+                owoSkin.LOG($"GameDirector gameStgameStateOutroateLoad"); //Cuando sale el camion
             }
         }
 
