@@ -44,6 +44,7 @@ namespace OWO_REPO
 
         public static void RecieveExplosion(MonoBehaviour __instance)
         {
+            owoSkin.LOG($"Receive Explosion position: {__instance.transform.position}");
             int distance = IsLocalPlayerNear(explosionDistance, __instance.transform.position);
             if (distance >= 0)
             {
