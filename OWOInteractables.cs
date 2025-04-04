@@ -221,7 +221,7 @@ namespace OWO_REPO
 
                 if (heldByLocalPlayer)
                 {
-                    owoSkin.Feel("Object Break", 3, 21);
+                    owoSkin.Feel("Object Break", 3, Mathf.Clamp((int)(valueLost / 500) * 100, 25, 100));
                 }
 
             }
