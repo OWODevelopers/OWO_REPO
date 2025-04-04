@@ -196,11 +196,11 @@ namespace OWO_REPO
         public class OnExplode
         {
             [HarmonyPostfix]
-            public static void Postfix()
+            public static void Postfix(Cauldron __instance)
             {
-                if (!owoSkin.suitEnabled) return;
+                if (!owoSkin.CanFeel()) return;
 
-                owoSkin.Feel("Cauldron Explosion",2);
+                RecieveExplosion(__instance);                
             }
         }
         #endregion
@@ -213,8 +213,6 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void PostFix(PhysGrabObjectImpactDetector __instance, float valueLost, Vector3 _contactPoint, int breakLevel, bool _loseValue)
             {
-                //owoSkin.LOG($"BreakRPC - Lost:{valueLost} break:{breakLevel} loseValue:{_loseValue}");
-
                 if (!owoSkin.CanFeel() && !_loseValue) return;
 
                 PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
