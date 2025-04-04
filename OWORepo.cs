@@ -129,9 +129,11 @@ namespace OWO_REPO
         public class OnDeath
         {
             [HarmonyPostfix]
-            public static void Postfix()
+            public static void Postfix(PlayerHealth __instance)
             {
-                if (owoSkin.CanFeel())
+                PlayerAvatar player = Traverse.Create(__instance).Field("playerAvatar").GetValue<PlayerAvatar>();                
+
+                if (owoSkin.CanFeel() && (player.photonView.IsMine || !GameManager.Multiplayer()))
                 {
                     owoSkin.playing = false;
 
