@@ -228,6 +228,8 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
+                owoSkin.LOG("Grab Beam Start");
+
                 if (__instance.isLocal && owoSkin.CanFeel()) 
                 {
                     PhysGrabObject grabbedPhysGrabObject = Traverse.Create(__instance).Field("grabbedPhysGrabObject").GetValue<PhysGrabObject>();
@@ -247,7 +249,7 @@ namespace OWO_REPO
             {
                 if(__instance.isLocal && owoSkin.CanFeel()) owoSkin.StopBeam();
                     
-                //owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
+                owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }
 
