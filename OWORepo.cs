@@ -83,9 +83,16 @@ namespace OWO_REPO
         public class OnRevive
         {
             [HarmonyPostfix]
-            public static void Postfix(Vector3 _rotation)
+            public static void Postfix(PlayerController __instance)
             {
-                owoSkin.LOG($"PlayerController Revive - _rotation: {_rotation}");
+                bool isMine = __instance.playerAvatar.GetComponent<PlayerAvatar>().photonView.IsMine;
+
+                if (!owoSkin.playing && (isMine|| !GameManager.Multiplayer()))
+                {
+                    owoSkin.playing = true;
+                    
+                    owoSkin.Feel("Revive", 3);
+                }
             }
         }
 

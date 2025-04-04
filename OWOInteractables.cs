@@ -44,6 +44,7 @@ namespace OWO_REPO
 
         public static void RecieveExplosion(MonoBehaviour __instance)
         {
+            owoSkin.LOG($"Receive Explosion position: {__instance.transform.position}");
             int distance = IsLocalPlayerNear(explosionDistance, __instance.transform.position);
             if (distance >= 0)
             {
@@ -221,49 +222,6 @@ namespace OWO_REPO
         }
 
         #endregion
-
-        #region Valuables
-        [HarmonyPatch(typeof(ValuableLovePotion), "StateIdle")]
-        public class OnValuableLovePotionStateIdle
-        {
-            [HarmonyPostfix]
-            public static void Postfix(ValuableLovePotion __instance)
-            {
-                bool flag = Traverse.Create(__instance).Field("flag").GetValue<bool>();
-                PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
-                bool heldByLocalPlayer = Traverse.Create(physGrabObject).Field("heldByLocalPlayer").GetValue<bool>();
-
-                if (heldByLocalPlayer && flag)
-                {
-                    owoSkin.LOG($"ValuableLovePotion StateIdle");
-                }
-            }
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Shop
-        [HarmonyPatch(typeof(ExtractionPoint), "OnShopClick")]
-        public class OnOnShopClick
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"ExtractionPoint OnShopClick"); //It works!
-            }
-        }
-
-        [HarmonyPatch(typeof(MoneyValuable), "MoneyBurst")]
-        public class OnMoneyBurst
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"MoneyValuable MoneyBurst");
-            }
-        }
         #endregion
     }
 }
