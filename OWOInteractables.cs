@@ -8,7 +8,7 @@ namespace OWO_REPO
     public class OWOInteractables
     {
         static OWOSkin owoSkin;
-        public static float explosionDistance = 20;
+        public static float explosionDistance = 10;
 
         public OWOInteractables(OWOSkin owoSkinGiven, float explosionReference)
         {
@@ -18,12 +18,19 @@ namespace OWO_REPO
 
         public static bool IsLocalPlayerNear(float range, Vector3 position)
         {
+            owoSkin.LOG($"GrenadeIsLocal:{range} - {position}");
+
+
             foreach (PlayerAvatar playerAvatar in GameDirector.instance.PlayerList)
             {
-                if (Traverse.Create(playerAvatar).Field("IsLocal").GetValue<bool>())
+                owoSkin.LOG($"GrenadeIsLocal - photonMine: {playerAvatar.photonView.IsMine}");
+
+                if (playerAvatar.photonView.IsMine || !GameManager.Multiplayer())
                 {
                     Vector3 position2 = playerAvatar.PlayerVisionTarget.VisionTransform.position;
                     float num = Vector3.Distance(position, position2);
+                    owoSkin.LOG($"Grenade Distance:{position} - {position2} | Num:{num} > {range}");
+
                     if (num > range)
                     {
                         return false;
@@ -135,6 +142,8 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeHuman __instance)
             {
+                owoSkin.LOG($"ItemGrenadeHuman Call");
+
                 if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
                     owoSkin.LOG($"ItemGrenadeHuman Explosion");
             }
@@ -230,6 +239,28 @@ namespace OWO_REPO
                 owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
             }
         }
+
+        [HarmonyPatch(typeof(PhysGrabObjectImpactDetector), "BreakRPC")]
+        public class OnBreakRPC
+        {
+            [HarmonyPostfix]
+            public static void PostFix(PhysGrabObjectImpactDetector __instance, float valueLost, Vector3 _contactPoint, int breakLevel, bool _loseValue)
+            {
+                owoSkin.LOG($"BreakRPC - Lost:{valueLost} break:{breakLevel} loseValue:{_loseValue}");
+
+                if (!owoSkin.CanFeel() && !_loseValue) return;
+
+                PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
+                bool heldByLocalPlayer = Traverse.Create(physGrabObject).Field("heldByLocalPlayer").GetValue<bool>();
+
+                if (heldByLocalPlayer)
+                {
+                    owoSkin.Feel("Object Break", 3, 21);
+                }
+
+            }
+        }
+
         #endregion
 
         #region Valuables
@@ -241,7 +272,7 @@ namespace OWO_REPO
             {
                 bool flag = Traverse.Create(__instance).Field("flag").GetValue<bool>();
                 PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
-                bool heldByLocalPlayer = Traverse.Create(__instance).Field("heldByLocalPlayer").GetValue<bool>();
+                bool heldByLocalPlayer = Traverse.Create(physGrabObject).Field("heldByLocalPlayer").GetValue<bool>();
 
                 if (heldByLocalPlayer && flag)
                 {

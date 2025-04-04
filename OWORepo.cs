@@ -233,7 +233,7 @@ namespace OWO_REPO
 
                 if (__instance.isLocal && owoSkin.CanFeel()) 
                 {
-                        owoSkin.BeamIntensity(grabbedPhysGrabObject.rb.mass);
+                        owoSkin.BeamIntensity(grabbedPhysGrabObject ? grabbedPhysGrabObject.rb.mass : 0.5f);
                         owoSkin.StartBeam();
                         //owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
                 }
