@@ -117,6 +117,16 @@ namespace OWO_REPO
             }
         }
 
+        [HarmonyPatch(typeof(ItemMine), "StateTriggered")]
+        public class OnStateTriggered
+        {
+            [HarmonyPostfix]
+            public static void Postfix(ItemMine __instance)
+            {
+                RecieveExplosion(__instance);
+            }
+        }
+
         #region Grenades
 
         [HarmonyPatch(typeof(ItemGrenadeDuctTaped), "Explosion")]
@@ -135,7 +145,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeExplosive __instance)
             {
-                //RecieveExplosion(__instance);
+                RecieveExplosion(__instance);
             }
         }
 
@@ -166,23 +176,6 @@ namespace OWO_REPO
             public static void Postfix(ItemGrenadeStun __instance)
             {
                 RecieveExplosion(__instance);
-            }
-        }
-
-        [HarmonyPatch(typeof(ItemGrenade), "TickEnd")]
-        public class OnItemGrenadeTickEnd
-        {
-            [HarmonyPostfix]
-            public static void Postfix(ItemGrenade __instance)
-            {
-                //if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-
-                ItemEquippable itemEquippable = Traverse.Create(__instance).Field("itemEquippable").GetValue<ItemEquippable>();
-                bool isEquipped = Traverse.Create(itemEquippable).Field("isEquipped").GetValue<bool>();
-
-                if (isEquipped) return;
-
-                owoSkin.LOG($"ItemGrenade TickEnd");
             }
         }
 
