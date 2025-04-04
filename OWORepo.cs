@@ -20,7 +20,7 @@ namespace OWO_REPO
         public static OWOSkin owoSkin;
         public static OWOInteractables interactables;        
         public static float explosionDistance = 20;
-        public static string lastPlayerState = "";
+        public static string lastPlayerState = "";        
 
         private void Awake()
         {
@@ -228,13 +228,12 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PhysGrabber __instance)
             {
-                owoSkin.LOG("Grab Beam Start");
+                PhysGrabObject grabbedPhysGrabObject = Traverse.Create(__instance).Field("grabbedPhysGrabObject").GetValue<PhysGrabObject>();
+                //owoSkin.LOG($"GrabBeamStart {__instance.gameObject.name} - {grabbedPhysGrabObject.rb.mass}");
 
                 if (__instance.isLocal && owoSkin.CanFeel()) 
                 {
-                    PhysGrabObject grabbedPhysGrabObject = Traverse.Create(__instance).Field("grabbedPhysGrabObject").GetValue<PhysGrabObject>();
-                    ItemVolume componentInChildren = grabbedPhysGrabObject.GetComponentInChildren<ItemVolume>();
-                        owoSkin.BeamIntensity(itemVolume.medium);
+                        owoSkin.BeamIntensity(grabbedPhysGrabObject.rb.mass);
                         owoSkin.StartBeam();
                         //owoSkin.LOG($"PhysGrabber PhysGrabStartEffects - {componentInChildren.itemVolume}");
                 }

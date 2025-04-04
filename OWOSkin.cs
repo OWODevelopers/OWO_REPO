@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace OWO_REPO
 {
@@ -143,27 +144,9 @@ namespace OWO_REPO
             else LOG("Feedback not registered: " + key);
         }
 
-        public void BeamIntensity(SemiFunc.itemVolume volume) 
-        {
-            switch(volume) 
-            {
-                case SemiFunc.itemVolume.large:
-                case SemiFunc.itemVolume.large_wide:
-                case SemiFunc.itemVolume.large_plus:
-                case SemiFunc.itemVolume.large_high:
-                    beamIntensity = 80;
-                    break;
-                case SemiFunc.itemVolume.power_crystal:
-                    beamIntensity = 50;
-                    break;
-                case SemiFunc.itemVolume.upgrade:
-                case SemiFunc.itemVolume.healthPack:
-                    beamIntensity = 25;
-                    break;
-                default:
-                    beamIntensity = 30;
-                    break;
-            }
+        public void BeamIntensity(float objectMass) 
+        {            
+            beamIntensity = (int)Mathf.Clamp((objectMass/7) * 100, 30, 100);
         }
 
         #region Beam loop
