@@ -16,7 +16,7 @@ namespace OWO_REPO
             explosionDistance = explosionReference;
         }
 
-        public static bool IsLocalPlayerNear(float range, Vector3 position)
+        public static int IsLocalPlayerNear(float range, Vector3 position)
         {
             owoSkin.LOG($"GrenadeIsLocal:{range} - {position}");
 
@@ -33,13 +33,23 @@ namespace OWO_REPO
 
                     if (num > range)
                     {
-                        return false;
+                        return -1;
                     }
-                    return true;
+                    return (int)num;
                 }
                 continue;
             }
-            return false;
+            return -1;
+        }
+
+        public static void RecieveExplosion(MonoBehaviour __instance)
+        {
+            int distance = IsLocalPlayerNear(explosionDistance, __instance.transform.position);
+            if (distance >= 0)
+            {
+                owoSkin.Feel("Explosion", 3, (distance + 10) - (distance * 2) * 10);
+                //owoSkin.LOG($"ItemGrenadeHuman Explosion {(distance + 10) - (distance * 2)}");
+            }
         }
 
         #region WorldInteractable
@@ -52,8 +62,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PropaneTankTrap __instance)
             {
-                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                owoSkin.LOG($"PropaneTankTrap Explode");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -63,8 +72,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(BarrelValuable __instance)
             {
-                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                owoSkin.LOG($"BarrelValuable Explode");
+                RecieveExplosion(__instance);                
             }
         }
 
@@ -74,8 +82,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(FlamethrowerValuable __instance)
             {
-                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                owoSkin.LOG($"FlamethrowerValuable Explode");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -85,8 +92,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PowerCrystalValuable __instance)
             {
-                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                owoSkin.LOG($"PowerCrystalValuable Explode");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -96,8 +102,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ToiletFun __instance)
             {
-                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                owoSkin.LOG($"ToiletFun Explosion");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -107,8 +112,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemMeleeInflatableHammer __instance)
             {
-                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
-                owoSkin.LOG($"ItemMeleeInflatableHammer ExplosionRPC");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -120,8 +124,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeDuctTaped __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeDuctTaped Explosion");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -131,8 +134,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeExplosive __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeExplosive Explosion");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -142,11 +144,8 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeHuman __instance)
             {
-                owoSkin.LOG($"ItemGrenadeHuman Call");
-
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeHuman Explosion");
-            }
+                RecieveExplosion(__instance);
+            }            
         }
 
         [HarmonyPatch(typeof(ItemGrenadeShockwave), "Explosion")]
@@ -155,8 +154,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeShockwave __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeShockwave Explosion");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -166,8 +164,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeStun __instance)
             {
-                if (IsLocalPlayerNear(explosionDistance, __instance.transform.position))
-                    owoSkin.LOG($"ItemGrenadeStun Explosion");
+                RecieveExplosion(__instance);
             }
         }
 
@@ -177,7 +174,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenade __instance)
             {
-                if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
+                //if (!IsLocalPlayerNear(explosionDistance, __instance.transform.position)) return;
 
                 ItemEquippable itemEquippable = Traverse.Create(__instance).Field("itemEquippable").GetValue<ItemEquippable>();
                 bool isEquipped = Traverse.Create(itemEquippable).Field("isEquipped").GetValue<bool>();
