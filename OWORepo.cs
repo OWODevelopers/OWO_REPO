@@ -144,16 +144,6 @@ namespace OWO_REPO
         }
         #endregion
 
-        [HarmonyPatch(typeof(PlayerAvatar), "TumbleStart")]
-        public class OnTumbleStart
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"PlayerTumble TumbleStart");
-            }
-        }
-
         [HarmonyPatch(typeof(PlayerReviveEffects), "Trigger")]
         public class OnTrigger
         {
@@ -248,68 +238,10 @@ namespace OWO_REPO
             {
                 if(__instance.isLocal && owoSkin.CanFeel()) owoSkin.StopBeam();
                     
-                owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
+                //owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }
-
-
-
-        #endregion
-
-        #region GameState
-
-        [HarmonyPatch(typeof(GameDirector), "gameStateLoad")]
-        public class OngameStateLoad
-        {
-            [HarmonyPostfix]
-            public static void Prefix(GameDirector __instance)
-            {
-                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
-                if (gameStateStartImpulse)
-                owoSkin.LOG($"GameDirector gameStateLoad");
-            }
-        }
-
-        [HarmonyPatch(typeof(GameDirector), "gameStateOutro")]
-        public class OngameStateOutro
-        {
-            [HarmonyPostfix]
-            public static void Prefix(GameDirector __instance)
-            {
-                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
-                if (gameStateStartImpulse)
-                owoSkin.LOG($"GameDirector gameStateOutro"); //Cuando sale el camion
-            }
-        }
-
-        [HarmonyPatch(typeof(GameDirector), "gameStateEnd")]
-        public class OngameStateEnd
-        {
-            [HarmonyPostfix]
-            public static void Prefix(GameDirector __instance)
-            {
-                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
-                if (gameStateStartImpulse)
-                owoSkin.LOG($"GameDirector gameStateEnd");
-            }
-        }
-
-
-        [HarmonyPatch(typeof(GameDirector), "gameStateStart")]
-        public class OngameStateStart
-        {
-            [HarmonyPostfix]
-            public static void Prefix(GameDirector __instance)
-            {
-                if (!LevelGenerator.Instance.Generated) return;
-
-                bool gameStateStartImpulse = Traverse.Create(__instance).Field("gameStateStartImpulse").GetValue<bool>();
-                if (gameStateStartImpulse)
-                owoSkin.LOG($"GameDirector gameStateEnd");
-            }
-        }
-
-        #endregion
+        #endregion        
 
         #region Laser
 
