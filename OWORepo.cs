@@ -106,10 +106,10 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(PlayerHealth __instance, int damage, bool savingGrace, int enemyIndex = -1)
             {
-                if (!owoSkin.CanFeel() || enemyIndex == -1) return; // No sentimos si no estamos jugando
+                if (!owoSkin.CanFeel()) return; // No sentimos si no estamos jugando
 
                 PhotonView photonView = Traverse.Create(__instance).Field("photonView").GetValue<PhotonView>();
-                if (damage > 0 && (photonView.IsMine || !GameManager.Multiplayer())) 
+                if (damage > 0 && (photonView.IsMine || !GameManager.Multiplayer()))
                 {
                     owoSkin.Feel("Hurt", 3, Mathf.Clamp((damage/70*100),30,100));
                     owoSkin.LOG($"Hurt: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
