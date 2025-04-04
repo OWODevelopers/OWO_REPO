@@ -47,7 +47,7 @@ namespace OWO_REPO
             int distance = IsLocalPlayerNear(explosionDistance, __instance.transform.position);
             if (distance >= 0)
             {
-                owoSkin.Feel("Explosion", 3, (distance + 10) - (distance * 2) * 10);
+                owoSkin.Feel("Explosion", 3, Mathf.Clamp((distance + 10) - (distance * 2) * 10, 30, 100));
                 //owoSkin.LOG($"ItemGrenadeHuman Explosion {(distance + 10) - (distance * 2)}");
             }
         }
@@ -134,7 +134,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(ItemGrenadeExplosive __instance)
             {
-                RecieveExplosion(__instance);
+                //RecieveExplosion(__instance);
             }
         }
 
@@ -191,26 +191,6 @@ namespace OWO_REPO
         #endregion
 
         #region Cauldron
-        [HarmonyPatch(typeof(Cauldron), "CookStart")]
-        public class OnCookStart
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"Cauldron CookStart");
-            }
-        }
-
-        [HarmonyPatch(typeof(Cauldron), "EndCook")]
-        public class OnEndCook
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"Cauldron EndCook");
-            }
-        }
-
         [HarmonyPatch(typeof(Cauldron), "Explosion")]
         public class OnExplode
         {
@@ -225,17 +205,6 @@ namespace OWO_REPO
         #endregion
 
         #region BreakObject
-        [HarmonyPatch(typeof(HurtCollider), "PhysObjectHurt")]
-        public class OnPhysObjectHurt
-        {
-            [HarmonyPostfix]
-            public static void Postfix(PhysGrabObject physGrabObject, BreakImpact impact, float hitForce, float hitTorque, bool apply, bool destroyLaunch)
-            {
-                PhotonView photonView = Traverse.Create(physGrabObject).Field("photonView").GetValue<PhotonView>();
-
-                owoSkin.LOG($"HurtCollider PhysObjectHurt - physGrabObject: {physGrabObject} - impact: {impact} - hitForce: {hitForce} - hitTorque: {hitTorque} - apply: {apply} - destroyLaunch: {destroyLaunch} - isMine?: {photonView.IsMine}");
-            }
-        }
 
         [HarmonyPatch(typeof(PhysGrabObjectImpactDetector), "BreakRPC")]
         public class OnBreakRPC
@@ -243,7 +212,7 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void PostFix(PhysGrabObjectImpactDetector __instance, float valueLost, Vector3 _contactPoint, int breakLevel, bool _loseValue)
             {
-                owoSkin.LOG($"BreakRPC - Lost:{valueLost} break:{breakLevel} loseValue:{_loseValue}");
+                //owoSkin.LOG($"BreakRPC - Lost:{valueLost} break:{breakLevel} loseValue:{_loseValue}");
 
                 if (!owoSkin.CanFeel() && !_loseValue) return;
 

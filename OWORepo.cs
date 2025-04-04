@@ -19,7 +19,7 @@ namespace OWO_REPO
 
         public static OWOSkin owoSkin;
         public static OWOInteractables interactables;        
-        public static float explosionDistance = 20;
+        public static float explosionDistance = 10;
         public static string lastPlayerState = "";        
 
         private void Awake()
