@@ -48,7 +48,7 @@ namespace OWO_REPO
             int distance = IsLocalPlayerNear(explosionDistance, __instance.transform.position);
             if (distance >= 0)
             {
-                owoSkin.Feel("Explosion", 3, Mathf.Clamp((distance + 10) - (distance * 2) * 10, 30, 100));
+                owoSkin.Feel("Explosion", 3, Mathf.Clamp(((distance + 10) - (distance * 2)) * 10, 30, 100));
                 //owoSkin.LOG($"ItemGrenadeHuman Explosion {(distance + 10) - (distance * 2)}");
             }
         }
