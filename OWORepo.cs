@@ -229,6 +229,17 @@ namespace OWO_REPO
         }
 
         [HarmonyPatch(typeof(CameraGlitch), "PlayUpgrade")]
+        public class OnPlayUpgrade
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                if (!owoSkin.CanFeel()) return;
+
+                owoSkin.Feel("Upgrade", 2);
+            }
+        }
+
         #endregion
 
         #region GrabBeam
