@@ -17,7 +17,16 @@ Want to get an OWO Suit? [Look here](https://owogame.com/shop/).
 - Enjoy your inmersive experience! 😊
 
 # Featured effect
-
+- Heal
+- Hurt
+- Death
+- Grab Beam
+- Jump
+- Landing
+- Object Break
+- Crouch
+- Revive
+- Explosion
 
 # Manual Connection
 If you are having trouble with the automatic connection, create a .txt file called OWO_Manual_IP.txt  
