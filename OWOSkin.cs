@@ -169,7 +169,7 @@ namespace OWO_REPO
             while (beamIsActive)
             {
                 Feel("Grab Beam", 0, beamIntensity);
-                await Task.Delay(100);
+                await Task.Delay(200);
             }
         }
 
