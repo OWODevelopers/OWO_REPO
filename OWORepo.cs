@@ -228,6 +228,7 @@ namespace OWO_REPO
             }
         }
 
+        [HarmonyPatch(typeof(CameraGlitch), "PlayUpgrade")]
         #endregion
 
         #region GrabBeam
