@@ -128,7 +128,7 @@ namespace OWO_REPO
                 PhotonView photonView = Traverse.Create(__instance).Field("photonView").GetValue<PhotonView>();
                 if (photonView.IsMine)
                 {
-                    owoSkin.Feel("Hurt", 3);                    
+                    owoSkin.Feel("Hurt", 3, 30);                    
                 }
             }
         }
