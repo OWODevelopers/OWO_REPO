@@ -141,7 +141,7 @@ namespace OWO_REPO
             {
                 if (!owoSkin.CanFeel()) return;
 
-                owoSkin.Feel("Healt", 2);                
+                owoSkin.Feel("Heal", 2);                
                 owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}");
             }
         }
