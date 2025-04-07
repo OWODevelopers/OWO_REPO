@@ -265,16 +265,16 @@ namespace OWO_REPO
 
         #region Laser
 
-        [HarmonyPatch(typeof(SemiLaser), "LaserActive")]
-        public class OnLaserActive
-        {
-            [HarmonyPostfix]
-            public static void PostFix(SemiLaser __instance, Vector3 _startPosition, Vector3 _endPosition, bool _isHitting)
-            {
-                if(IsLocalPlayerNear(explosionDistance, _startPosition) || IsLocalPlayerNear(explosionDistance, _endPosition))
-                    owoSkin.LOG($"SemiLaser LaserActive");
-            }
-        }
+        //[HarmonyPatch(typeof(SemiLaser), "LaserActive")]
+        //public class OnLaserActive
+        //{
+        //    [HarmonyPostfix]
+        //    public static void PostFix(SemiLaser __instance, Vector3 _startPosition, Vector3 _endPosition, bool _isHitting)
+        //    {
+        //        if(IsLocalPlayerNear(explosionDistance, _startPosition) || IsLocalPlayerNear(explosionDistance, _endPosition))
+        //            owoSkin.LOG($"SemiLaser LaserActive");
+        //    }
+        //}
 
         #endregion
 
