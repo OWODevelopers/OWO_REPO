@@ -146,7 +146,7 @@ namespace OWO_REPO
 
         public void BeamIntensity(float objectMass) 
         {            
-            beamIntensity = (int)Mathf.Clamp((objectMass/7) * 100, 30, 100);
+            beamIntensity = (int)Mathf.Clamp((objectMass/7) * 100, 40, 100);
         }
 
         #region Beam loop

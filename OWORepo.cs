@@ -139,9 +139,10 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix(int healAmount, bool effect = true)
             {
-                //if (!owoSkin.CanFeel()) return;
-                
-                owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}"); //it works!
+                if (!owoSkin.CanFeel()) return;
+
+                owoSkin.Feel("Healt", 2);                
+                owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}");
             }
         }
 
