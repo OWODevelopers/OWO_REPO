@@ -117,6 +117,22 @@ namespace OWO_REPO
             }
         }
 
+        [HarmonyPatch(typeof(PlayerHealth), "HurtOther")]
+        public class OnHurtOther
+        {
+            [HarmonyPostfix]
+            public static void Postfix(PlayerHealth __instance,int damage, Vector3 hurtPosition, bool savingGrace, int enemyIndex = -1)
+            {
+                if (!owoSkin.CanFeel() && !GameManager.Multiplayer()) return;
+
+                PhotonView photonView = Traverse.Create(__instance).Field("photonView").GetValue<PhotonView>();
+                if (photonView.IsMine)
+                {
+                    owoSkin.Feel("Hurt", 3);                    
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(PlayerHealth), "Heal")]
         public class OnHeal
         {
@@ -144,8 +160,6 @@ namespace OWO_REPO
                     owoSkin.StopAllHapticFeedback();
                     owoSkin.Feel("Death", 4);
                 }
-
-                //owoSkin.LOG($"Playerhealth Death");
             }
         }
         #endregion
