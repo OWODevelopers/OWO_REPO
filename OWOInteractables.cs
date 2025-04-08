@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using Photon.Pun;
+using System.Collections.Generic;
 using UnityEngine;
 using static HurtCollider;
 
@@ -221,5 +222,41 @@ namespace OWO_REPO
 
         #endregion
         #endregion
+        [HarmonyPatch(typeof(ItemGun), "ShootRPC")]
+        public class OnShootRPC
+        {
+            [HarmonyPostfix]
+            public static void PostFix(ItemGun __instance)
+            {
+                if (!owoSkin.CanFeel()) return;
+
+                bool isLocal = false;
+
+                PhysGrabObject physGrabObject = Traverse.Create(__instance).Field("physGrabObject").GetValue<PhysGrabObject>();
+                List<PhysGrabber> playerGrabbing = Traverse.Create(physGrabObject).Field("playerGrabbing").GetValue<List<PhysGrabber>>();
+
+                if (GameManager.Multiplayer())
+                {
+                    foreach (PhysGrabber item in playerGrabbing)
+                    {
+                        if (item.photonView.IsMine)
+                        {
+                            isLocal = true;
+                        }
+                    }
+                }
+                else if (playerGrabbing.Count > 0)
+                {
+                    isLocal = true;
+                }
+
+                if (isLocal)
+                    owoSkin.Feel("Recoil", 3);
+                
+
+            }
+        }
+
+
     }
 }
