@@ -268,6 +268,30 @@ namespace OWO_REPO
             }
         }
 
+        [HarmonyPatch(typeof(RunManager), "UpdateLevel")]
+        public class OnUpdateLevel
+        {
+            [HarmonyPostfix]
+            public static void Postfix(RunManager __instance)
+            {
+                if (!owoSkin.suitEnabled) return;
+
+                //owoSkin.LOG($"#### Level: {__instance.levelCurrent}");
+
+                if (__instance.levelCurrent != __instance.levelLobbyMenu && !owoSkin.playing)
+                {
+                    owoSkin.playing = true;
+                    //owoSkin.LOG($"<YOU CAN FEEL NOW>");
+                }
+                else if (owoSkin.playing)
+                {
+                    owoSkin.playing = false;
+                    owoSkin.StopAllHapticFeedback();
+                    //owoSkin.LOG($"<STOP FEELING THE GAME>");
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(RunManager), "LeaveToMainMenu")]
         public class OnLeaveToMainMenu
         {
