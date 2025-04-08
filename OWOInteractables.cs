@@ -40,7 +40,9 @@ namespace OWO_REPO
         }
 
         public static void RecieveExplosion(MonoBehaviour __instance)
-        {            
+        {
+            if (!owoSkin.CanFeel()) return;
+
             int distance = IsLocalPlayerNear(explosionDistance, __instance.transform.position);
             if (distance >= 0)
             {
