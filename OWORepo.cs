@@ -13,9 +13,9 @@ namespace OWO_REPO
     [BepInPlugin("org.bepinex.plugins.OWO_REPO", "OWO_REPO", "1.0.0")]
     public class Plugin : BaseUnityPlugin
     {
-#pragma warning disable CS0109
+        #pragma warning disable CS0109
         internal static new ManualLogSource Log;
-#pragma warning restore CS0109
+        #pragma warning restore CS0109
 
         public static OWOSkin owoSkin;
         public static OWOInteractables interactables;        
@@ -72,10 +72,10 @@ namespace OWO_REPO
 
                 if (!__instance.Crouching && !__instance.Crawling) lastPlayerState = "standing";
 
-                if (__instance.sprinting) owoSkin.LOG($"PlayerController ChangeState - sprinting");
-                if (__instance.Crawling) owoSkin.LOG($"PlayerController ChangeState - Crawling");
-                if (__instance.Sliding) owoSkin.LOG($"PlayerController ChangeState - Sliding");
-                if (__instance.moving) owoSkin.LOG($"PlayerController ChangeState - moving");
+                //if (__instance.sprinting) owoSkin.LOG($"PlayerController ChangeState - sprinting");
+                //if (__instance.Crawling) owoSkin.LOG($"PlayerController ChangeState - Crawling");
+                //if (__instance.Sliding) owoSkin.LOG($"PlayerController ChangeState - Sliding");
+                //if (__instance.moving) owoSkin.LOG($"PlayerController ChangeState - moving");
             }
         }
         
@@ -98,7 +98,7 @@ namespace OWO_REPO
 
         #endregion
 
-            #region PlayerHealth
+        #region PlayerHealth
 
         [HarmonyPatch(typeof(PlayerHealth), "Hurt")]
         public class OnHurt
@@ -112,7 +112,7 @@ namespace OWO_REPO
                 if (damage > 0 && (photonView.IsMine || !GameManager.Multiplayer()))
                 {
                     owoSkin.Feel("Hurt", 3, Mathf.Clamp((damage/70*100),30,100));
-                    owoSkin.LOG($"Hurt: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
+                    //owoSkin.LOG($"Hurt: {damage} - SavingGrace: {savingGrace} - EnemyIndex: {enemyIndex}");
                 }
             }
         }
@@ -142,7 +142,7 @@ namespace OWO_REPO
                 if (!owoSkin.CanFeel()) return;
 
                 owoSkin.Feel("Heal", 2);                
-                owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}");
+                //owoSkin.LOG($"Playerhealth Heal - HealAmount: {healAmount} - Effect: {effect}");
             }
         }
 

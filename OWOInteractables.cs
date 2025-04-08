@@ -252,8 +252,6 @@ namespace OWO_REPO
 
                 if (isLocal)
                     owoSkin.Feel("Recoil", 3);
-                
-
             }
         }
 
