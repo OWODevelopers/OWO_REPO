@@ -17,6 +17,7 @@ Want to get an OWO Suit? [Look here](https://owogame.com/shop/).
 - Enjoy your inmersive experience! 😊
 
 # Featured effect
+- Heart beat
 - Heal
 - Hurt
 - Death
@@ -27,6 +28,8 @@ Want to get an OWO Suit? [Look here](https://owogame.com/shop/).
 - Crouch
 - Revive
 - Explosion
+- Upgrade
+- Recoil
 
 # Manual Connection
 If you are having trouble with the automatic connection, create a .txt file called OWO_Manual_IP.txt  
