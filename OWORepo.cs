@@ -6,6 +6,7 @@ using Photon.Pun;
 using static HurtCollider;
 using static SemiFunc;
 using System.Collections.Generic;
+using static RunManager;
 
 
 namespace OWO_REPO
@@ -193,13 +194,11 @@ namespace OWO_REPO
             [HarmonyPostfix]
             public static void Postfix()
             {
-                if (!owoSkin.suitEnabled) return;
+                if (!owoSkin.CanFeel()) return;
 
-                if(owoSkin.playing) owoSkin.Feel("Landing", 2); //Activamos el inicio del juego
-                else owoSkin.playing = true;
+                owoSkin.Feel("Landing", 2);
             }
         }
-
 
 
         #endregion
@@ -274,9 +273,50 @@ namespace OWO_REPO
                 //owoSkin.LOG($"PhysGrabber PhysGrabEndEffects");
             }
         }
-        #endregion        
+        #endregion
 
-        #region Laser
+        #region Start/Stop Feeling Logic
+
+        [HarmonyPatch(typeof(RunManager), "ChangeLevel")]
+        public class OnChangeLevel
+        {
+            [HarmonyPostfix]
+            public static void Postfix(RunManager __instance)
+            {
+                if (!owoSkin.suitEnabled) return;
+
+                //owoSkin.LOG($"#### Level: {__instance.levelCurrent}");
+
+                if (__instance.levelCurrent != __instance.levelLobbyMenu && !owoSkin.playing)
+                {
+                    owoSkin.playing = true;
+                    //owoSkin.LOG($"<YOU CAN FEEL NOW>");
+                }
+                else
+                {
+                    owoSkin.playing = false;
+                    owoSkin.StopAllHapticFeedback();
+                    //owoSkin.LOG($"<STOP FEELING THE GAME>");
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(RunManager), "LeaveToMainMenu")]
+        public class OnLeaveToMainMenu
+        {
+            [HarmonyPostfix]
+            public static void Postfix(RunManager __instance)
+            {
+                if (!owoSkin.suitEnabled || !owoSkin.playing) return;
+                
+                owoSkin.playing = false;
+                owoSkin.StopAllHapticFeedback();
+            }
+        }
+
+        #endregion
+
+        //#region Laser
 
         //[HarmonyPatch(typeof(SemiLaser), "LaserActive")]
         //public class OnLaserActive
@@ -289,7 +329,7 @@ namespace OWO_REPO
         //    }
         //}
 
-        #endregion
+        //#endregion
 
 
     }
