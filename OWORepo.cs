@@ -166,16 +166,6 @@ namespace OWO_REPO
         }
         #endregion
 
-        [HarmonyPatch(typeof(PlayerReviveEffects), "Trigger")]
-        public class OnTrigger
-        {
-            [HarmonyPostfix]
-            public static void Postfix()
-            {
-                owoSkin.LOG($"PlayerReviveEffects Trigger");
-            }
-        }
-
         [HarmonyPatch(typeof(CameraJump), "Jump")]
         public class OnJump
         {
@@ -204,29 +194,6 @@ namespace OWO_REPO
         #endregion
 
         #region Items
-
-        [HarmonyPatch(typeof(ItemUpgrade), "PlayerUpgrade")]
-        public class OnPlayerUpgrade
-        {
-            [HarmonyPostfix]
-            public static void Postfix(ItemUpgrade __instance)
-            {
-                owoSkin.LOG($"ItemUpgrade PlayerUpgrade");
-
-                bool upgradeDone = Traverse.Create(__instance).Field("upgradeDone").GetValue<bool>();
-                ItemToggle itemToggle = Traverse.Create(__instance).Field("itemToggle").GetValue<ItemToggle>();
-                int playerTogglePhotonID = Traverse.Create(itemToggle).Field("playerTogglePhotonID").GetValue<int>();
-
-                if (!upgradeDone)
-                {
-                    PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromPhotonID(playerTogglePhotonID);
-                    if (playerAvatar.photonView.IsMine || !GameManager.Multiplayer())
-                    {
-                        owoSkin.LOG($"YO - ItemUpgrade PlayerUpgrade - YO");
-                    }
-                }
-            }
-        }
 
         [HarmonyPatch(typeof(CameraGlitch), "PlayUpgrade")]
         public class OnPlayUpgrade

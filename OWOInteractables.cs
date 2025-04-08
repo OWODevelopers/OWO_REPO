@@ -18,19 +18,15 @@ namespace OWO_REPO
         }
 
         public static int IsLocalPlayerNear(float range, Vector3 position)
-        {
-            owoSkin.LOG($"GrenadeIsLocal:{range} - {position}");
-
-
+        {            
             foreach (PlayerAvatar playerAvatar in GameDirector.instance.PlayerList)
             {
-                owoSkin.LOG($"GrenadeIsLocal - photonMine: {playerAvatar.photonView.IsMine}");
+                //owoSkin.LOG($"GrenadeIsLocal - photonMine: {playerAvatar.photonView.IsMine}");
 
                 if (playerAvatar.photonView.IsMine || !GameManager.Multiplayer())
                 {
                     Vector3 position2 = playerAvatar.PlayerVisionTarget.VisionTransform.position;
-                    float num = Vector3.Distance(position, position2);
-                    owoSkin.LOG($"Grenade Distance:{position} - {position2} | Num:{num} > {range}");
+                    float num = Vector3.Distance(position, position2);                    
 
                     if (num > range)
                     {
@@ -44,8 +40,7 @@ namespace OWO_REPO
         }
 
         public static void RecieveExplosion(MonoBehaviour __instance)
-        {
-            owoSkin.LOG($"Receive Explosion position: {__instance.transform.position}");
+        {            
             int distance = IsLocalPlayerNear(explosionDistance, __instance.transform.position);
             if (distance >= 0)
             {
@@ -222,6 +217,7 @@ namespace OWO_REPO
 
         #endregion
         #endregion
+        
         [HarmonyPatch(typeof(ItemGun), "ShootRPC")]
         public class OnShootRPC
         {
