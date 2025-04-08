@@ -292,7 +292,7 @@ namespace OWO_REPO
                     owoSkin.playing = true;
                     //owoSkin.LOG($"<YOU CAN FEEL NOW>");
                 }
-                else
+                else if(owoSkin.playing)
                 {
                     owoSkin.playing = false;
                     owoSkin.StopAllHapticFeedback();
